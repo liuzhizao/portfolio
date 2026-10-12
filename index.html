@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>刘至造 · 个人作品集</title>
+<meta name="description" content="刘至造的个人作品集——产品思维 × AI 落地。外贸询盘 AI 工作流实战案例与项目经历。">
+
+<!-- ============================================================
+     字体说明：
+     - Space Grotesk：用于英文标签与大数字（Google Fonts）
+     - 中文使用系统字体栈，保证任何设备都能正常渲染
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   全局变量（改配色只动这里）
+   ============================================================ */
+:root{
+  --navy:        #1B2A4A;   /* 主色：深蓝 */
+  --navy-deep:   #12203C;   /* 更深的蓝，用于页脚 */
+  --amber:       #F59E0B;   /* 点缀色：琥珀 */
+  --amber-soft:  #FEF3DC;   /* 琥珀浅底 */
+  --ink:         #1B2A4A;   /* 正文主色 */
+  --muted:       #5B6478;   /* 次要文字 */
+  --line:        #E4E8F0;   /* 分隔线 */
+  --paper:       #FFFFFF;   /* 白底 */
+  --paper-warm:  #F7F8FB;   /* 浅灰底区块 */
+  --radius:      14px;
+  --font-latin:  'Space Grotesk', -apple-system, sans-serif;
+  --font-body:   -apple-system, BlinkMacSystemFont, "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============================================================
+   基础重置
+   ============================================================ */
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  font-family:var(--font-body);
+  color:var(--ink);
+  background:var(--paper);
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+::selection{ background:var(--amber); color:#fff; }
+
+/* 锚点偏移：避免被固定导航条遮挡 */
+section{ scroll-margin-top:76px; }
+
+/* 内容最大宽度容器 */
+.wrap{ max-width:1120px; margin:0 auto; padding:0 24px; }
+
+/* ============================================================
+   滚动渐显（交互 b）：进入视口淡入 + 上移，只触发一次
+   ============================================================ */
+.reveal{
+  opacity:0;
+  transform:translateY(26px);
+  transition:opacity .8s var(--ease-out), transform .8s var(--ease-out);
+  will-change:opacity, transform;
+}
+.reveal.in{ opacity:1; transform:none; }
+/* 时间线节点逐个淡入用的延迟阶梯 */
+.reveal[data-delay="1"]{ transition-delay:.12s; }
+.reveal[data-delay="2"]{ transition-delay:.24s; }
+.reveal[data-delay="3"]{ transition-delay:.36s; }
+
+/* ============================================================
+   顶部导航条
+   ============================================================ */
+.nav{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent;
+  transition:box-shadow .3s ease, border-color .3s ease;
+}
+/* 滚动后加浅色阴影 */
+.nav.scrolled{
+  border-bottom-color:var(--line);
+  box-shadow:0 4px 20px rgba(27,42,74,.06);
+}
+.nav-inner{
+  max-width:1120px; margin:0 auto; padding:0 24px;
+  height:64px; display:flex; align-items:center; justify-content:space-between;
+}
+.nav-logo{
+  font-weight:700; font-size:1.05rem; letter-spacing:.02em;
+  display:flex; align-items:center; gap:10px;
+}
+.nav-logo .dot{ width:8px; height:8px; background:var(--amber); border-radius:50%; }
+.nav-links{ display:flex; gap:34px; list-style:none; }
+.nav-links a{
+  font-size:.92rem; color:var(--muted);
+  padding:4px 0; position:relative;
+  transition:color .25s ease;
+}
+.nav-links a::after{
+  content:""; position:absolute; left:0; bottom:-2px;
+  width:0; height:2px; background:var(--amber);
+  transition:width .3s var(--ease-out);
+}
+.nav-links a:hover{ color:var(--navy); }
+.nav-links a:hover::after{ width:100%; }
+
+/* 汉堡按钮（仅手机端显示） */
+.nav-toggle{
+  display:none; background:none; border:none; cursor:pointer;
+  width:40px; height:40px; position:relative;
+}
+.nav-toggle span{
+  display:block; width:22px; height:2px; background:var(--navy);
+  margin:5px auto; transition:transform .3s ease, opacity .3s ease;
+}
+.nav-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2){ opacity:0; }
+.nav-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+/* ============================================================
+   区块标题的通用样式：英文小标 + 中文大标
+   ============================================================ */
+.sec-head{ margin-bottom:56px; }
+.sec-kicker{
+  font-family:var(--font-latin);
+  font-size:.78rem; font-weight:500;
+  letter-spacing:.32em; text-transform:uppercase;
+  color:var(--amber); margin-bottom:14px;
+  display:flex; align-items:center; gap:14px;
+}
+.sec-kicker::before{
+  content:""; width:36px; height:2px; background:var(--amber);
+}
+.sec-title{
+  font-size:clamp(1.7rem, 3.4vw, 2.4rem);
+  font-weight:700; line-height:1.3; letter-spacing:.01em;
+}
+
+/* ============================================================
+   区块 1 · Hero
+   ============================================================ */
+.hero{
+  position:relative;
+  padding:168px 0 96px;
+  overflow:hidden;
+  /* 极淡的点阵背景，呼应"工作流"的工程感 */
+  background-image:radial-gradient(rgba(27,42,74,.07) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+/* 右侧大号装饰数字，3% 透明度做纹理 */
+.hero::after{
+  content:"0→1";
+  position:absolute; right:-2%; top:8%;
+  font-family:var(--font-latin); font-weight:700;
+  font-size:clamp(120px, 22vw, 300px);
+  color:var(--navy); opacity:.04;
+  pointer-events:none; line-height:1;
+}
+.hero-eyebrow{
+  font-size:.85rem; color:var(--muted);
+  letter-spacing:.14em; margin-bottom:26px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.hero-eyebrow .tag{
+  font-family:var(--font-latin); font-size:.72rem; letter-spacing:.18em;
+  color:var(--navy); background:var(--amber-soft);
+  border:1px solid #F3DFB8;
+  padding:3px 12px; border-radius:999px;
+}
+.hero-title{
+  font-size:clamp(2.3rem, 6vw, 4.1rem);
+  font-weight:700; line-height:1.22; letter-spacing:.01em;
+  margin-bottom:28px;
+}
+/* 主标题第二行的琥珀下划线强调 */
+.hero-title .hl{ position:relative; white-space:nowrap; }
+.hero-title .hl::after{
+  content:""; position:absolute; left:0; right:0; bottom:.08em;
+  height:.32em; background:var(--amber); opacity:.28; z-index:-1;
+  border-radius:2px;
+}
+.hero-sub{
+  max-width:640px; color:var(--muted);
+  font-size:1.02rem; margin-bottom:40px;
+}
+.hero-actions{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:64px; }
+
+/* 按钮 */
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:.95rem; font-weight:600;
+  padding:14px 30px; border-radius:999px;
+  transition:transform .3s var(--ease-out), box-shadow .3s ease, background .3s ease;
+  cursor:pointer; border:none;
+}
+.btn-primary{
+  background:var(--navy); color:#fff;
+  box-shadow:0 8px 24px rgba(27,42,74,.22);
+}
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 30px rgba(27,42,74,.28); }
+.btn-ghost{
+  background:transparent; color:var(--navy);
+  border:1.5px solid var(--navy);
+}
+.btn-ghost:hover{ background:var(--navy); color:#fff; transform:translateY(-2px); }
+.btn .tri{ font-size:.7rem; } /* 主按钮里的小三角符号 */
+
+/* Hero 底部三张数据卡 */
+.stats{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;
+  position:relative; z-index:1;
+}
+.stat{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:30px 28px 26px;
+  transition:transform .3s var(--ease-out), box-shadow .3s ease;
+}
+.stat:hover{ transform:translateY(-4px); box-shadow:0 14px 34px rgba(27,42,74,.09); }
+.stat-num{
+  font-family:var(--font-latin); font-weight:700;
+  font-size:clamp(2.1rem, 4vw, 2.9rem);
+  line-height:1; color:var(--navy);
+  display:flex; align-items:baseline; gap:4px;
+}
+.stat-num .suffix{ font-size:.5em; color:var(--amber); font-weight:700; }
+.stat-label{ font-weight:600; font-size:.98rem; margin:14px 0 4px; }
+.stat-meta{ font-size:.82rem; color:var(--muted); }
+
+/* ============================================================
+   区块 2 · 作品集
+   ============================================================ */
+.works{ padding:110px 0; }
+
+/* —— 第一层：主案例（视觉权重最大，边框高亮）—— */
+.case-main{
+  border:2px solid var(--navy);
+  border-radius:calc(var(--radius) + 6px);
+  padding:clamp(28px, 4.5vw, 52px);
+  background:#fff;
+  position:relative;
+  margin-bottom:36px;
+}
+/* 右上角"活 Demo"角标 */
+.case-main .badge{
+  position:absolute; top:-15px; left:clamp(28px, 4.5vw, 52px);
+  background:var(--amber); color:#fff;
+  font-size:.78rem; font-weight:700; letter-spacing:.12em;
+  padding:6px 16px; border-radius:999px;
+}
+.case-main-head{ margin-bottom:30px; }
+.case-main-head h3{
+  font-size:clamp(1.35rem, 2.6vw, 1.8rem); font-weight:700; margin-bottom:12px;
+}
+.case-main-head h3 .try{ color:var(--amber); font-size:.65em; font-weight:600; margin-left:8px; }
+.case-main-head p{ color:var(--muted); max-width:720px; }
+
+/* Demo 区：左占位卡片 + 右示例按钮 */
+.demo-grid{
+  display:grid; grid-template-columns:1.5fr 1fr; gap:28px; align-items:start;
+}
+/* 占位容器：之后把扣子 WebSDK 嵌入代码粘贴到 #coze-demo 内部即可 */
+#coze-demo{
+  min-height:480px;
+  border:1.5px dashed #C7CEDE;
+  border-radius:var(--radius);
+  background:var(--paper-warm);
+  padding:26px;
+  display:flex; flex-direction:column;
+}
+/* 占位卡片（模拟一封邮件的样子） */
+.demo-placeholder{
+  flex:1; background:#fff;
+  border:1px solid var(--line); border-radius:12px;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.demo-mail-bar{
+  display:flex; align-items:center; gap:10px;
+  padding:14px 18px; border-bottom:1px solid var(--line);
+  background:#FBFCFE;
+}
+.demo-mail-bar .led{ width:9px; height:9px; border-radius:50%; }
+.demo-mail-bar .led:nth-child(1){ background:#E5E9F2; }
+.demo-mail-bar .led:nth-child(2){ background:#E5E9F2; }
+.demo-mail-bar .led:nth-child(3){ background:var(--amber); }
+.demo-mail-bar .subject{
+  font-size:.82rem; color:var(--muted); margin-left:6px;
+  font-family:var(--font-latin); letter-spacing:.04em;
+}
+.demo-mail-body{ padding:20px 18px; flex:1; display:flex; flex-direction:column; }
+.demo-mail-body textarea{
+  flex:1; width:100%; resize:none; border:none; outline:none;
+  font-family:var(--font-body); font-size:.94rem; line-height:1.8;
+  color:var(--ink); background:transparent; min-height:220px;
+}
+.demo-mail-note{
+  padding:14px 18px; border-top:1px dashed var(--line);
+  font-size:.82rem; color:var(--muted);
+}
+.demo-mail-note strong{ color:var(--navy); }
+
+/* Demo 容器挂载聊天窗后的正式样式：实线边框 + 白色背景，并隐藏占位卡片 */
+#coze-demo.mounted{height:560px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  padding:0;
+  overflow:hidden;
+}
+#coze-demo.mounted .demo-placeholder{ display:none; }
+
+/* 提示条 toast：固定底部居中、深蓝底白字、胶囊形、带过渡动画 */
+.toast{
+  position:fixed; left:50%; bottom:36px; z-index:200;
+  transform:translateX(-50%) translateY(16px);
+  opacity:0; pointer-events:none;
+  background:var(--navy); color:#fff;
+  font-size:.88rem; padding:12px 28px; border-radius:999px;
+  box-shadow:0 10px 30px rgba(27,42,74,.28);
+  transition:opacity .35s var(--ease-out), transform .35s var(--ease-out);
+  max-width:calc(100% - 48px); text-align:center;
+}
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* 示例邮件胶囊按钮 */
+.demo-samples h4{
+  font-size:.85rem; color:var(--muted); font-weight:600;
+  letter-spacing:.06em; margin-bottom:16px;
+}
+.pill{
+  display:block; width:100%; text-align:left;
+  background:#fff; border:1.5px solid var(--line);
+  border-radius:999px; padding:13px 20px;
+  margin-bottom:12px; cursor:pointer;
+  font-size:.9rem; font-weight:600; color:var(--navy);
+  transition:border-color .25s ease, background .25s ease, transform .25s var(--ease-out);
+}
+.pill small{ display:block; font-weight:400; font-size:.76rem; color:var(--muted); margin-top:2px; }
+.pill:hover{ border-color:var(--amber); background:var(--amber-soft); transform:translateX(4px); }
+.pill.active{ border-color:var(--amber); background:var(--amber-soft); }
+
+/* —— 第二层：三张经历卡 —— */
+.exp-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+.exp-card{
+  border:1px solid var(--line); border-radius:var(--radius);
+  padding:30px 26px; background:#fff;
+  display:flex; flex-direction:column;
+  transition:transform .3s var(--ease-out), box-shadow .3s ease;
+}
+.exp-card:hover{ transform:translateY(-4px); box-shadow:0 14px 34px rgba(27,42,74,.09); }
+.exp-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:6px; }
+.exp-org{ font-weight:700; font-size:1.05rem; }
+.exp-date{
+  font-family:var(--font-latin); font-size:.74rem; color:var(--muted);
+  letter-spacing:.04em; white-space:nowrap; padding-top:4px;
+}
+.exp-tag{
+  display:inline-block; align-self:flex-start;
+  font-size:.74rem; font-weight:600; color:var(--amber);
+  background:var(--amber-soft); border-radius:6px;
+  padding:2px 10px; margin:6px 0 14px;
+}
+.exp-card p{ font-size:.9rem; color:var(--muted); }
+.works-foot{
+  margin-top:26px; font-size:.85rem; color:var(--muted);
+  padding-left:14px; border-left:3px solid var(--amber);
+}
+
+/* ============================================================
+   区块 3 · AI 复盘（时间线）
+   ============================================================ */
+.retro{ padding:110px 0; background:var(--paper-warm); }
+.timeline{ position:relative; max-width:760px; }
+/* 时间线左侧竖轨 */
+.timeline::before{
+  content:""; position:absolute; left:11px; top:8px; bottom:8px;
+  width:2px; background:linear-gradient(var(--amber), #D8DEEA);
+}
+.tl-item{ position:relative; padding:0 0 48px 52px; }
+.tl-item:last-child{ padding-bottom:0; }
+/* 节点圆点 */
+.tl-item::before{
+  content:""; position:absolute; left:4px; top:8px;
+  width:16px; height:16px; border-radius:50%;
+  background:#fff; border:3px solid var(--amber);
+}
+.tl-ver{
+  font-family:var(--font-latin); font-weight:700;
+  font-size:.8rem; letter-spacing:.16em; color:var(--amber);
+  text-transform:uppercase; margin-bottom:6px;
+}
+.tl-item h3{ font-size:1.18rem; font-weight:700; margin-bottom:10px; }
+.tl-item p{ color:var(--muted); font-size:.95rem; max-width:620px; }
+.tl-item .flow{
+  font-family:var(--font-latin); font-size:.8rem; color:var(--navy);
+  background:#fff; border:1px solid var(--line); border-radius:8px;
+  display:inline-block; padding:8px 14px; margin:10px 0;
+  letter-spacing:.02em;
+}
+.tl-summary{
+  margin-top:44px; max-width:760px;
+  background:var(--navy); color:#fff;
+  border-radius:var(--radius); padding:26px 30px;
+  font-size:.98rem;
+}
+.tl-summary strong{ color:var(--amber); }
+
+/* ============================================================
+   区块 4 · 关于我
+   ============================================================ */
+.about{ padding:110px 0; }
+.about-edu{
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  padding-bottom:44px; margin-bottom:52px;
+  border-bottom:1px solid var(--line);
+}
+.about-edu .school{ font-size:1.25rem; font-weight:700; }
+.about-edu .chip{
+  font-size:.78rem; font-weight:600; color:var(--navy);
+  border:1px solid var(--line); border-radius:999px; padding:3px 14px;
+}
+.about-edu .chip.amber{ color:var(--amber); border-color:#F3DFB8; background:var(--amber-soft); }
+.about-edu .major{ color:var(--muted); font-size:.95rem; }
+
+/* AI 能力阶梯：从左到右逐级升高 */
+.ladder{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; align-items:end; }
+.rung{
+  background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+  padding:28px 26px; position:relative;
+  transition:transform .3s var(--ease-out), box-shadow .3s ease;
+}
+.rung:hover{ transform:translateY(-4px); box-shadow:0 14px 34px rgba(27,42,74,.09); }
+.rung .lv{
+  font-family:var(--font-latin); font-weight:700; font-size:2rem;
+  color:var(--navy); opacity:.16; line-height:1;
+}
+.rung h3{ font-size:1.08rem; font-weight:700; margin:8px 0 12px; }
+.rung p{ font-size:.88rem; color:var(--muted); }
+/* 阶梯高度差：L1 最矮，L3 最高且用深蓝填充突出 */
+.rung-1{ padding-bottom:34px; }
+.rung-2{ padding-bottom:64px; }
+.rung-3{
+  padding-bottom:94px;
+  background:var(--navy); border-color:var(--navy);
+}
+.rung-3 .lv{ color:#fff; opacity:.25; }
+.rung-3 h3{ color:#fff; }
+.rung-3 p{ color:#B9C2D6; }
+.rung-3 h3 .star{ color:var(--amber); }
+
+.about-skills{
+  margin-top:44px; font-size:.9rem; color:var(--muted);
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.about-skills .label{ font-weight:700; color:var(--navy); }
+.about-skills .sep{ color:var(--amber); }
+
+/* ============================================================
+   区块 5 · 联系我 + 页脚
+   ============================================================ */
+.contact{ padding:110px 0 0; background:var(--paper-warm); }
+.contact-grid{
+  display:grid; grid-template-columns:1.2fr 1fr; gap:48px; align-items:start;
+  padding-bottom:90px;
+}
+.contact-list{ list-style:none; }
+.contact-list li{
+  display:flex; align-items:center; gap:16px;
+  padding:18px 0; border-bottom:1px solid var(--line);
+}
+.contact-list .k{
+  font-family:var(--font-latin); font-size:.72rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--muted); width:72px; flex-shrink:0;
+}
+.contact-list .v{ font-weight:600; }
+.contact-list .v.placeholder{ color:#A6AEC2; font-weight:400; }
+.contact-list a.v:hover{ color:var(--amber); }
+
+/* 微信二维码占位框 */
+.qr-box{ text-align:center; }
+.qr-frame{
+  width:180px; height:180px; margin:0 auto 14px;
+  border:1.5px dashed #C7CEDE; border-radius:var(--radius);
+  background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  color:#A6AEC2; font-size:.82rem; text-align:center; line-height:1.7;
+  padding:0 20px;
+}
+.qr-box small{ color:var(--muted); }
+
+/* 简历下载占位按钮 */
+.btn-resume{
+  margin-top:26px;
+  display:inline-flex; align-items:center; gap:10px;
+  border:1.5px dashed #C7CEDE; color:#A6AEC2;
+  background:#fff; border-radius:999px; padding:14px 30px;
+  font-size:.95rem; font-weight:600; cursor:not-allowed;
+}
+
+/* 页脚 */
+.footer{
+  background:var(--navy-deep); color:#8B96AF;
+  padding:34px 0; font-size:.85rem;
+}
+.footer-inner{
+  max-width:1120px; margin:0 auto; padding:0 24px;
+  display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.footer .name{ color:#fff; font-weight:700; letter-spacing:.06em; }
+
+/* ============================================================
+   手机端适配（≤860px）
+   ============================================================ */
+@media (max-width: 860px){
+  /* 导航折叠成汉堡菜单 */
+  .nav-toggle{ display:block; }
+  .nav-links{
+    position:absolute; top:64px; left:0; right:0;
+    background:#fff; flex-direction:column; gap:0;
+    border-bottom:1px solid var(--line);
+    box-shadow:0 16px 30px rgba(27,42,74,.08);
+    display:none;
+  }
+  .nav-links.open{ display:flex; }
+  .nav-links li{ border-top:1px solid var(--line); }
+  .nav-links a{ display:block; padding:15px 24px; }
+  .nav-links a::after{ display:none; }
+
+  .hero{ padding:130px 0 72px; }
+  .hero-title{ font-size:clamp(1.9rem, 8.4vw, 2.6rem); }
+  .hero::after{ display:none; }
+
+  /* 数据卡 / 经历卡 / 阶梯 / Demo 全部单列 */
+  .stats{ grid-template-columns:1fr; }
+  .exp-grid{ grid-template-columns:1fr; }
+  .demo-grid{ grid-template-columns:1fr; }
+  .ladder{ grid-template-columns:1fr; align-items:stretch; }
+  .rung-1, .rung-2, .rung-3{ padding-bottom:28px; } /* 手机端阶梯改为顺序排列 */
+  .contact-grid{ grid-template-columns:1fr; gap:36px; }
+  .qr-box{ text-align:left; }
+  .qr-frame{ margin:0 0 14px; }
+
+  .works, .retro, .about, .contact{ padding:80px 0; }
+  .contact{ padding-bottom:0; }
+  .contact-grid{ padding-bottom:70px; }
+
+  /* 手机端：toast 位置略上移，避免贴着屏幕底边遮挡内容 */
+  .toast{ bottom:24px; font-size:.84rem; padding:11px 22px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     顶部固定导航条
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#hero"><span class="dot"></span>刘至造</a>
+    <button class="nav-toggle" id="navToggle" aria-label="打开菜单">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero">首页</a></li>
+      <li><a href="#works">作品</a></li>
+      <li><a href="#retro">AI 复盘</a></li>
+      <li><a href="#about">关于</a></li>
+      <li><a href="#contact">联系</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ============================================================
+     区块 1 · 首页 Hero
+     ============================================================ -->
+<section class="hero" id="hero">
+  <div class="wrap">
+    <p class="hero-eyebrow">
+      <span class="tag">OPEN TO WORK</span>
+      刘至造 ｜ 大连海事大学 2027 届 ｜ 求职中
+    </p>
+
+    <h1 class="hero-title reveal">
+      从一封询盘邮件开始，<br>
+      <span class="hl">让 AI 替业务干活</span>。
+    </h1>
+
+    <p class="hero-sub reveal" data-delay="1">
+      我把外贸询盘处理拆成 7 节点 AI 工作流——信息提取、分级判定、
+      产品匹配、风险预警、回复草稿，全自动跑完。
+      下面这封"邮件"，你可以亲手试。
+    </p>
+
+    <div class="hero-actions reveal" data-delay="2">
+      <a class="btn btn-primary" href="#works"><span class="tri">▶</span> 亲手试试智能体</a>
+      <a class="btn btn-ghost" href="#works-list">了解我的经历</a>
+    </div>
+
+    <!-- 三张数据卡：数字进入视口后从 0 滚动到目标值（1 秒内） -->
+    <div class="stats reveal" data-delay="3">
+      <div class="stat">
+        <div class="stat-num"><span class="count" data-target="80">0</span><span class="suffix">+</span></div>
+        <div class="stat-label">独立对接客户全链路</div>
+        <div class="stat-meta">启途教育 · 半年</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><span class="count" data-target="10">0</span><span class="suffix">万+</span></div>
+        <div class="stat-label">同城内容自然曝光</div>
+        <div class="stat-meta">旭日青云创业 · 3 个月</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><span class="count" data-target="7">0</span><span class="suffix">节点</span></div>
+        <div class="stat-label">AI 询盘工作流</div>
+        <div class="stat-meta">扣子搭建 · 20 组测试驱动迭代</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 2 · 作品集
+     ============================================================ -->
+<section class="works" id="works">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="sec-kicker">01 · Works</p>
+      <h2 class="sec-title">做过的东西</h2>
+    </div>
+
+    <!-- 第一层：主案例（活 Demo） -->
+    <div class="case-main reveal">
+      <span class="badge">主案例 · 活 DEMO</span>
+      <div class="case-main-head">
+        <h3>外贸询盘预处理工作流<span class="try">（可试）</span></h3>
+        <p>
+          输入一封询盘邮件，AI 自动输出：分级(A/B/C/D) / 需求摘要 / 建议动作 / 回复草稿。
+          7 节点流水线 + 20 条产品知识库 + 规则引擎，经 20 组测试用例驱动迭代。
+        </p>
+      </div>
+
+      <div class="demo-grid">
+        <!--
+          Demo 占位容器：
+          之后把扣子 WebSDK 的嵌入代码粘贴到下方 #coze-demo 内部、
+          替换掉 .demo-placeholder 这段即可。
+        -->
+        <div id="coze-demo">
+          <div class="demo-placeholder">
+            <div class="demo-mail-bar">
+              <span class="led"></span><span class="led"></span><span class="led"></span>
+              <span class="subject">INQUIRY · 来邮模拟</span>
+            </div>
+            <div class="demo-mail-body">
+              <textarea id="demoInput" placeholder="点击右侧任一示例，示例邮件会填入这里。"></textarea>
+            </div>
+            <div class="demo-mail-note">
+              <strong>在线演示加载中</strong>——若长时间未显示，可联系我获取演示视频。
+            </div>
+          </div>
+        </div>
+
+        <!-- 三个示例邮件胶囊按钮：点击把示例文本填入 Demo -->
+        <div class="demo-samples">
+          <h4>选一封示例邮件试试 →</h4>
+          <button class="pill" data-sample="We need 2000 pcs Bluetooth earphones, FOB Shanghai, delivery to Hamburg before Dec 20.">
+            询盘 A 级案例
+            <small>看它如何判 A 级并自动起草回复</small>
+          </button>
+          <button class="pill" data-sample="Bluetooth earphones 2000 pcs, FOB USD 2.5/pc, accept?">
+            砍价邮件
+            <small>看它能否识别低于报价区间的砍价</small>
+          </button>
+          <button class="pill" data-sample="Congratulations! You won a free iPhone 15! Click here!">
+            垃圾邮件
+            <small>看它会不会直接判 D 级忽略</small>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二层：三张经历卡 -->
+    <div class="exp-grid" id="works-list">
+      <div class="exp-card reveal">
+        <div class="exp-top">
+          <span class="exp-org">旭日青云创业项目</span>
+          <span class="exp-date">2024.02 – 2025.03</span>
+        </div>
+        <span class="exp-tag">0→1 冷启动</span>
+        <p>
+          3 个月小红书同城运营 10 万+ 自然曝光，沉淀千余名精准私域用户；
+          统筹"报名—排课—交付"全业务链路，运营期业务数据零差错。
+        </p>
+      </div>
+      <div class="exp-card reveal" data-delay="1">
+        <div class="exp-top">
+          <span class="exp-org">启途教育 · 咨询顾问</span>
+          <span class="exp-date">2025.03 – 2025.09</span>
+        </div>
+        <span class="exp-tag">客户全链路</span>
+        <p>
+          半年独立对接 80+ 客户：定位学员痛点 → 匹配师资 → 输出定制课时方案，
+          方案获家长普遍认可；分层运营 60+ 存量客户，推动老客户复购。
+        </p>
+      </div>
+      <div class="exp-card reveal" data-delay="2">
+        <div class="exp-top">
+          <span class="exp-org">蔚来汽车 · 区域运营实习</span>
+          <span class="exp-date">2026.01 – 2026.03</span>
+        </div>
+        <span class="exp-tag">流程与数据</span>
+        <p>
+          搭建入离职、物资管理 SOP 与资产/账单/耗材三维台账，
+          覆盖 40+ 件资产跟踪、月度 50+ 笔账单核对。
+        </p>
+      </div>
+    </div>
+    <p class="works-foot reveal">
+      另有国家级大创项目 ×2、全国大学生智能汽车竞赛校级二等奖。
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 3 · AI 复盘（时间线）
+     ============================================================ -->
+<section class="retro" id="retro">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="sec-kicker">02 · Retrospective</p>
+      <h2 class="sec-title">踩过的坑：三个版本的迭代</h2>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <p class="tl-ver">v1 · 单体提示词版</p>
+        <h3>一句话指令驱动大模型：能跑，但格式不稳</h3>
+        <p>
+          遇到 Markdown 软换行问题：单个换行会被渲染器合并成一行，
+          用"加粗标题 + 模块间空行 + 输出示例（few-shot）"解决。
+        </p>
+      </div>
+      <div class="tl-item reveal" data-delay="1">
+        <p class="tl-ver">v2 · 七节点工作流版</p>
+        <h3>确定性判断走规则代码，语言生成才调用大模型</h3>
+        <div class="flow">信息提取 → 分级判定 → 知识库检索 → 风险判定 → 回复生成 → 结束</div>
+        <p>
+          关键决策：确定性判断走规则代码（3 毫秒），
+          语言生成才调用大模型——按任务复杂度分配算力。
+        </p>
+      </div>
+      <div class="tl-item reveal" data-delay="2">
+        <p class="tl-ver">v3 · 智能体调用工作流版</p>
+        <h3>用"项目 ID 比对"替代关键词猜测</h3>
+        <p>
+          智能体通过 API 调用已部署的工作流，
+          用"项目 ID 比对"替代关键词猜测来防止误判递归。
+        </p>
+      </div>
+    </div>
+
+    <div class="tl-summary reveal">
+      <strong>20 组测试用例驱动迭代</strong>——把 6 类边界问题
+      （砍价识别、交期冲突、垃圾邮件拦截、品类过滤等）逐个修掉。
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 4 · 关于我
+     ============================================================ -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="sec-kicker">03 · About</p>
+      <h2 class="sec-title">关于我</h2>
+    </div>
+
+    <!-- 教育背景 -->
+    <div class="about-edu reveal">
+      <span class="school">大连海事大学</span>
+      <span class="chip amber">211</span>
+      <span class="chip amber">双一流</span>
+      <span class="chip">海洋资源与环境 · 本科</span>
+      <span class="chip">2027 届</span>
+    </div>
+
+    <!-- AI 能力三级阶梯（从左到右逐级升高） -->
+    <div class="ladder">
+      <div class="rung rung-1 reveal">
+        <div class="lv">L1</div>
+        <h3>用 AI 提效</h3>
+        <p>DeepSeek / Kimi（资料研究、方案撰写）、剪映 AI / Canva AI（内容制作）</p>
+      </div>
+      <div class="rung rung-2 reveal" data-delay="1">
+        <div class="lv">L2</div>
+        <h3>用 AI 做产品</h3>
+        <p>独立完成本作品集网站（需求 → 生成 → 迭代 → 部署）</p>
+      </div>
+      <div class="rung rung-3 reveal" data-delay="2">
+        <div class="lv">L3</div>
+        <h3>用 AI 编排工程化流程 <span class="star">★</span></h3>
+        <p>扣子搭建 7 节点询盘工作流 + 知识库 + 规则引擎 + 20 组测试驱动迭代</p>
+      </div>
+    </div>
+
+    <!-- 其他技能 -->
+    <p class="about-skills reveal">
+      <span class="label">其他技能</span>
+      Office 数据处理 <span class="sep">｜</span> CET-4 <span class="sep">｜</span> 新媒体工具（醒图 / 剪映 / Canva / 秀米）
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 5 · 联系我 + 页脚
+     ============================================================ -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="sec-kicker">04 · Contact</p>
+      <h2 class="sec-title">联系我</h2>
+    </div>
+
+    <div class="contact-grid">
+      <!-- 左：联系方式清单 -->
+      <div class="reveal">
+        <ul class="contact-list">
+          <li>
+            <span class="k">Phone</span>
+            <span class="v placeholder">手机号 · 待补充</span>
+          </li>
+          <li>
+            <span class="k">Email</span>
+            <a class="v" href="mailto:liuzhizao@outlook.com">liuzhizao@outlook.com</a>
+          </li>
+          <li>
+            <span class="k">WeChat</span>
+            <span class="v placeholder">二维码见右侧 · 图片待上传</span>
+          </li>
+        </ul>
+        <!-- 简历下载占位按钮：之后把 href 换成真实 PDF 链接，并去掉 disabled 样式 -->
+        <span class="btn-resume">简历 PDF · 整理中</span>
+      </div>
+
+      <!-- 右：微信二维码占位 -->
+      <div class="qr-box reveal" data-delay="1">
+        <div class="qr-frame">微信二维码<br>占位 · 待上传</div>
+        <small>扫码添加微信，备注来意即可</small>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© 2026 <span class="name">刘至造</span></span>
+      <span>本站由本人与 AI 协作完成</span>
+    </div>
+  </footer>
+</section>
+
+<!-- 提示条 toast（由 JS 控制显示/隐藏） -->
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ============================================================
+   1) 导航条：滚动时加浅色阴影
+   ============================================================ */
+(function(){
+  var nav = document.getElementById('nav');
+  function onScroll(){
+    if (window.scrollY > 8) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+})();
+
+/* ============================================================
+   2) 手机端汉堡菜单
+   ============================================================ */
+(function(){
+  var toggle = document.getElementById('navToggle');
+  var links  = document.getElementById('navLinks');
+  toggle.addEventListener('click', function(){
+    toggle.classList.toggle('open');
+    links.classList.toggle('open');
+  });
+  // 点击任一链接后收起菜单
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      toggle.classList.remove('open');
+      links.classList.remove('open');
+    });
+  });
+})();
+
+/* ============================================================
+   3) 交互 b：各区块滚动渐显（IntersectionObserver，只触发一次）
+   ============================================================ */
+(function(){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target); // 只触发一次
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+})();
+
+/* ============================================================
+   4) 交互 a：数据卡数字滚动（进入视口从 0 滚到目标值，1 秒内）
+   ============================================================ */
+(function(){
+  var DURATION = 950; // 毫秒，控制在 1 秒内
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  function countUp(el){
+    var target = parseInt(el.getAttribute('data-target'), 10);
+    var start = null;
+    function step(ts){
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / DURATION, 1);
+      el.textContent = Math.round(easeOutCubic(p) * target);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting){
+        countUp(entry.target);
+        io.unobserve(entry.target); // 只触发一次
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.count').forEach(function(el){ io.observe(el); });
+})();
+
+/* ============================================================
+   5) 提示条 toast：显示约 2.5 秒后自动消失
+   ============================================================ */
+var showToast = (function(){
+  var toast = document.getElementById('toast');
+  var timer = null;
+  return function(text){
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(function(){ toast.classList.remove('show'); }, 2500);
+  };
+})();
+
+/* ============================================================
+   6) 示例邮件胶囊按钮：
+      - 聊天窗未挂载：示例文本填入 demoInput（原有行为）
+      - 聊天窗已挂载：示例文本复制到剪贴板 + 弹出提示条
+        （聊天窗是跨域 iframe，无法直接填字，故用"复制+粘贴"方案）
+   ============================================================ */
+(function(){
+  var input = document.getElementById('demoInput');
+  var pills = document.querySelectorAll('.pill');
+  pills.forEach(function(pill){
+    pill.addEventListener('click', function(){
+      var text = pill.getAttribute('data-sample');
+      pills.forEach(function(p){ p.classList.remove('active'); });
+      pill.classList.add('active');
+
+      if (window.__cozeMounted){
+        // 已挂载：复制到剪贴板并提示
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(function(){
+            showToast('示例邮件已复制，在聊天框粘贴即可发送');
+          }, function(){
+            showToast('复制失败，请手动复制示例邮件');
+          });
+        } else {
+          showToast('当前浏览器不支持自动复制，请手动复制示例邮件');
+        }
+      } else {
+        // 未挂载：保持现状，填入占位卡片里的文本框
+        input.value = text;
+        input.focus();
+      }
+    });
+  });
+})();
+</script>
+
+<!-- ============================================================
+     扣子（Coze）Web SDK 接入
+     ※ 令牌位置就在下方 COZE_PAT 变量：现在还是占位符
+       'pat_o8zlidh9vMxBXnfxI4lzWrYDzFFGLzOG38RubWPzWUSOERmXwW8BCyG0GvNJkxEH'，换成你的真实 PAT 后聊天窗才会挂载。
+       只要它还是占位符，SDK 不会初始化，页面其余功能不受影响。
+     ============================================================ -->
+<script src="https://lf-cdn.coze.cn/obj/unpkg/latest/coze/web-sdk/dist/js-umd/index.min.js"></script>
+<script>
+(function(){
+  var COZE_PAT = 'pat_o8zlidh9vMxBXnfxI4lzWrYDzFFGLzOG38RubWPzWUSOERmXwW8BCyG0GvNJkxEH';   // ←←← 令牌在这里：把引号里的内容替换成你的 PAT
+
+  // 令牌仍是占位符：不初始化 SDK，保留占位卡片
+  if (COZE_PAT !== 'pat_o8zlidh9vMxBXnfxI4lzWrYDzFFGLzOG38RubWPzWUSOERmXwW8BCyG0GvNJkxEH') return;
+  // CDN 加载失败的兜底：同样保留占位卡片
+  if (typeof cozeWebSDK === 'undefined') return;
+
+  // 初始化：聊天窗挂进 #coze-demo 容器（非右下角悬浮球）
+  cozeWebSDK.init({
+    projectId: '7695609079141744703',
+    refreshToken: () => Promise.resolve(COZE_PAT),
+    container: '#coze-demo',
+    theme: 'light',
+    style: 'width:100%;height:520px;border:none;'
+  });
+
+  // 挂载检测：SDK 会在 #coze-demo 内插入跨域 iframe，
+  // 监听到 iframe 出现即视为挂载成功
+  var demo=document.getElementById('coze-demo');if(demo.querySelector('iframe')){window.__cozeMounted=1;demo.className='mounted'}
+  var observer={disconnect:function(){}};(function(){
+    if (demo.querySelector('iframe')){
+      window.__cozeMounted = true;        // 供胶囊按钮判断走"复制"逻辑
+      demo.classList.add('mounted');      // 隐藏占位卡片，容器换成正式样式
+      observer.disconnect();
+    }
+  });
+  //var tk=setInterval(function(){ if(demo.querySelector('iframe')){ window.__cozeMounted=true; demo.classList.add('mounted'); clea
+})();
+</script>
+
+</body>
+</html>
