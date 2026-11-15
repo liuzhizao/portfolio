@@ -1009,17 +1009,19 @@ var showToast = (function(){
 
 <!-- ============================================================
      扣子（Coze）Web SDK 接入
-     ※ 令牌位置就在下方 COZE_PAT 变量：现在还是占位符
-       'pat_o8zlidh9vMxBXnfxI4lzWrYDzFFGLzOG38RubWPzWUSOERmXwW8BCyG0GvNJkxEH'，换成你的真实 PAT 后聊天窗才会挂载。
-       只要它还是占位符，SDK 不会初始化，页面其余功能不受影响。
+     ※ COZE_PAT 是扣子「个人访问令牌」，有效期有限，过期或被删后
+       聊天窗会显示「无权限访问」——此时去扣子后台重新生成一个，
+       替换下方变量即可（换完记得重新提交 index.html）。
      ============================================================ -->
 <script src="https://lf-cdn.coze.cn/obj/unpkg/latest/coze/web-sdk/dist/js-umd/index.min.js"></script>
 <script>
 (function(){
-  var COZE_PAT = 'pat_o8zlidh9vMxBXnfxI4lzWrYDzFFGLzOG38RubWPzWUSOERmXwW8BCyG0GvNJkxEH';   // ←←← 令牌在这里：把引号里的内容替换成你的 PAT
+  var COZE_PAT = 'pat_DidkTPOOxzzT9m2ozxt3EFFFbm9QWF3LGENoaocFBdhcr0vYBgnMXVH42KdQk87F';   // 2026-11-16 生成（用户100354 账号），2026-12-16 到期，到期后重新生成并替换此处
 
-  // 令牌仍是占位符：不初始化 SDK，保留占位卡片
-  if (COZE_PAT !== 'pat_o8zlidh9vMxBXnfxI4lzWrYDzFFGLzOG38RubWPzWUSOERmXwW8BCyG0GvNJkxEH') return;
+  // 令牌没填/太短：不初始化 SDK，保留占位卡片
+  // 注意：这里只判断"有没有填"，绝不能拿它和某个写死的旧令牌比对，
+  // 否则换成新令牌后反而直接 return，聊天窗永远挂不上（本站就踩过这个坑）。
+  if (!COZE_PAT || COZE_PAT.indexOf('pat_') !== 0 || COZE_PAT.length < 40) return;
   // CDN 加载失败的兜底：同样保留占位卡片
   if (typeof cozeWebSDK === 'undefined') return;
 
@@ -1032,17 +1034,19 @@ var showToast = (function(){
     style: 'width:100%;height:520px;border:none;'
   });
 
-  // 挂载检测：SDK 会在 #coze-demo 内插入跨域 iframe，
-  // 监听到 iframe 出现即视为挂载成功
-  var demo=document.getElementById('coze-demo');if(demo.querySelector('iframe')){window.__cozeMounted=1;demo.className='mounted'}
-  var observer={disconnect:function(){}};(function(){
+  // 挂载检测：轮询等待 SDK 插入跨域 iframe，出现即隐藏占位卡片
+  var demo=document.getElementById('coze-demo');
+  var _tries=0;
+  var _timer=setInterval(function(){
     if (demo.querySelector('iframe')){
       window.__cozeMounted = true;        // 供胶囊按钮判断走"复制"逻辑
       demo.classList.add('mounted');      // 隐藏占位卡片，容器换成正式样式
-      observer.disconnect();
+      clearInterval(_timer);
+    } else if (++_tries > 80){            // 约 20 秒仍无 iframe，保留占位卡片
+      clearInterval(_timer);
+      demo.classList.add('coze-fail');
     }
-  });
-  //var tk=setInterval(function(){ if(demo.querySelector('iframe')){ window.__cozeMounted=true; demo.classList.add('mounted'); clea
+  }, 250);
 })();
 </script>
 
