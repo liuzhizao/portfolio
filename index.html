@@ -355,12 +355,20 @@ section{ scroll-margin-top:76px; }
 }
 .proto-block > p{ font-size:.92rem; color:var(--ink); line-height:1.7; margin-bottom:20px; max-width:640px; }
 .proto-frame{
-  width:100%; max-width:430px; height:760px; margin:0 auto;
+  width:100%; max-width:1080px; height:820px; margin:0 auto;
   border:1.5px solid var(--line); border-radius:20px;
   background:#fff; overflow:hidden;
 }
 .proto-frame iframe{ width:100%; height:100%; border:0; display:block; }
 .proto-note{ text-align:center; font-size:.78rem; color:var(--muted); margin-top:12px; }
+.proto-full{
+  display:block; width:max-content; margin:16px auto 0;
+  font-size:.88rem; font-weight:600; color:var(--navy);
+  text-decoration:none; border:1.5px solid var(--line);
+  border-radius:999px; padding:10px 24px;
+  transition:border-color .25s ease, background .25s ease;
+}
+.proto-full:hover{ border-color:var(--amber); background:var(--amber-soft); }
 @media (max-width:860px){
   .proto-frame{ height:640px; border-radius:16px; }
 }
@@ -721,9 +729,10 @@ section{ scroll-margin-top:76px; }
           点击屏幕里的蓝色按钮即可走通主链路。
         </p>
         <div class="proto-frame">
-          <iframe src="https://modao.cc/proto/CJDJRBa1tot5olbgfqp4e/sharing?view_mode=device&amp;screen=rbpVbWtTAixitTfG2&amp;canvasId=rcVbWtUX08GCeAQY&amp;device=iphone_17&amp;orientation=portrait" loading="lazy" allowfullscreen title="外贸询盘助手交互原型（墨刀）"></iframe>
+          <iframe src="https://modao.cc/proto/CJDJRBa1tot5olbgfqp4e/embed/v2/sharing?view_mode=device&amp;screen=rbpVbWtTAixitTfG2" loading="lazy" allowfullscreen title="外贸询盘助手交互原型（墨刀）"></iframe>
         </div>
-        <p class="proto-note">交互原型 · 墨刀制作 · 点击按钮可走通「入口 → 分流 → 问答 → 转人工」主链路</p>
+        <p class="proto-note">交互原型 · 墨刀制作 · 点击屏幕内按钮可走通「入口 → 分流 → 问答 → 转人工」主链路</p>
+        <a class="proto-full" href="https://modao.cc/proto/CJDJRBa1tot5olbgfqp4e/sharing?view_mode=device&amp;screen=rbpVbWtTAixitTfG2&amp;canvasId=rcVbWtUX08GCeAQY&amp;device=iphone_17&amp;orientation=portrait" target="_blank" rel="noopener">全屏演示交互原型 ↗</a>
       </div>
     </div>
 
