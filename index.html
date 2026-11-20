@@ -347,6 +347,24 @@ section{ scroll-margin-top:76px; }
 .pill:hover{ border-color:var(--amber); background:var(--amber-soft); transform:translateX(4px); }
 .pill.active{ border-color:var(--amber); background:var(--amber-soft); }
 
+/* —— 交互原型（墨刀）嵌入块 —— */
+.proto-block{ margin-top:36px; padding-top:28px; border-top:1px dashed var(--line); }
+.proto-block h4{
+  font-size:.85rem; color:var(--muted); font-weight:600;
+  letter-spacing:.06em; margin-bottom:10px;
+}
+.proto-block > p{ font-size:.92rem; color:var(--ink); line-height:1.7; margin-bottom:20px; max-width:640px; }
+.proto-frame{
+  width:100%; max-width:430px; height:760px; margin:0 auto;
+  border:1.5px solid var(--line); border-radius:20px;
+  background:#fff; overflow:hidden;
+}
+.proto-frame iframe{ width:100%; height:100%; border:0; display:block; }
+.proto-note{ text-align:center; font-size:.78rem; color:var(--muted); margin-top:12px; }
+@media (max-width:860px){
+  .proto-frame{ height:640px; border-radius:16px; }
+}
+
 /* —— 第二层：三张经历卡 —— */
 .exp-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
 .exp-card{
@@ -692,6 +710,20 @@ section{ scroll-margin-top:76px; }
             <small>看它会不会直接判 D 级忽略</small>
           </button>
         </div>
+      </div>
+
+      <!-- 交互原型（墨刀）：可点击 Demo -->
+      <div class="proto-block reveal">
+        <h4>INTERACTIVE PROTOTYPE</h4>
+        <p>
+          开发前的交互设计：用墨刀绘制<strong>询盘助手 4 页交互原型</strong>——
+          对话入口 → 意图分流 → 知识库问答 → 人工转接，先验证流程再动手搭建。
+          点击屏幕里的蓝色按钮即可走通主链路。
+        </p>
+        <div class="proto-frame">
+          <iframe src="https://modao.cc/proto/CJDJRBa1tot5olbgfqp4e/sharing?view_mode=device&amp;screen=rbpVbWtTAixitTfG2&amp;canvasId=rcVbWtUX08GCeAQY&amp;device=iphone_17&amp;orientation=portrait" loading="lazy" allowfullscreen title="外贸询盘助手交互原型（墨刀）"></iframe>
+        </div>
+        <p class="proto-note">交互原型 · 墨刀制作 · 点击按钮可走通「入口 → 分流 → 问答 → 转人工」主链路</p>
       </div>
     </div>
 
